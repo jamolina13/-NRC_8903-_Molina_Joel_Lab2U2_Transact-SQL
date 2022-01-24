@@ -1,0 +1,56 @@
+---MOLINA JOEL
+-- CONSULTA: Proporcione una consulta que muestre las 5 pistas más compradas en general.
+SELECT t.Name AS [Nombre_Pista],
+       COUNT(it.InvoiceLineId) AS [Compradas] 
+  FROM tracks t,
+       invoice_items it
+ WHERE t.trackId == it.trackId
+ GROUP BY t.Name
+ ORDER BY COUNT(it.InvoiceLineId) DESC
+ LIMIT 5;
+
+-- CONSULTA: Proporcione una consulta que muestre los 3 artistas más vendidos.
+SELECT a.Name AS [Nombre_Artista],
+       round(sum(it.UnitPrice), 2) AS [Total_Ventas]
+  FROM artists a,
+       invoice_items it,
+       tracks t,
+       albums al
+ WHERE it.trackId = t.trackId AND 
+       t.albumId = al.albumId AND 
+       al.artistId = a.artistId
+ GROUP BY Nombre_Artista
+ ORDER BY Total_Ventas DESC
+ LIMIT 3;
+
+-- CONSULTA: Proporcione una consulta que muestre el tipo de medio (Media Type) más comprado.
+
+SELECT * FROM tracks; 
+SELECT mt.name AS [Nombre_Tipo],
+       COUNT(it.trackId) AS [comprado]
+  FROM media_types mt,
+       tracks t,
+       invoice_items it
+ WHERE mt.MediaTypeId == t.MediaTypeId AND 
+       t.trackId == it.trackId
+ GROUP BY Nombre_Tipo
+ ORDER BY comprado DESC
+ LIMIT 1;
+ 
+-- Plantee por usted mismo al menos 3 consultas más que incluyan 4 o más tablas. 
+--    Consulta: Proporcione una consulta que muestre todos los artistas. El resultado debe incluir las pistas, el nombre del álbum, el tipo de medio y el género.
+
+SELECT ar.Name AS [Nombre_Artista],
+       t.Name AS [Nombre_Pista],
+       a.Title AS [Titulo_Album],
+       mt.Name AS [Tipo_Medio],
+       g.Name AS [Genero]
+  FROM artists ar,
+       tracks t,
+       albums a,
+       media_types mt,
+       genres g
+ WHERE ar.ArtistId == a.ArtistId AND
+       t.AlbumId == a.AlbumId AND 
+       t.MediaTypeId == mt.MediaTypeId AND 
+       t.GenreId == g.GenreId;
